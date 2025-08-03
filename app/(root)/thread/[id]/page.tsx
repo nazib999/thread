@@ -1,52 +1,24 @@
+// app/(root)/thread/[id]/page.tsx
 import { redirect } from 'next/navigation';
 import React from 'react';
-
 import Comment from '@/components/Comment';
 import ThreadCard from '@/components/ThreadCard';
-
 import { fetchUser } from '@/lib/action/user.action';
 import { fetchThreadById } from '@/lib/action/thread.action';
 import { currentUser } from '@clerk/nextjs/server';
 
 export const revalidate = 0;
 
-interface UserInfo {
-    _id: string;
-    onboarded: boolean;
-    // other fields if needed
-}
-
-interface Author {
-    _id: string;
-    name?: string;
-    image?: string;
-    username?: string;
-    // etc.
-}
-
-interface Thread {
-    _id: string;
-    parentId: string | null;
-    text?: string;
-    author: Author | null;
-    community?: string;
-    createdAt?: string;
-    children: Thread[];
-    // any other fields used by ThreadCard
-}
-
-
-
-async function page({ params }: { params: { id: string } }) {
+const Page = async ({ params }: { params: { id: string } }) => {
     if (!params.id) return null;
 
     const user = await currentUser();
     if (!user) return null;
 
-    const userInfo = (await fetchUser(user.id)) as UserInfo;
+    const userInfo = await fetchUser(user.id);
     if (!userInfo?.onboarded) redirect('/onboarding');
 
-    const thread = (await fetchThreadById(params.id)) as Thread | null;
+    const thread = await fetchThreadById(params.id);
     if (!thread) return null;
 
     return (
@@ -68,12 +40,12 @@ async function page({ params }: { params: { id: string } }) {
                 <Comment
                     threadId={params.id}
                     currentUserImg={user.imageUrl}
-                    currentUserId={JSON.stringify(userInfo._id)}
+                    currentUserId={typeof userInfo._id === 'string' ? userInfo._id : userInfo._id.toString()}
                 />
             </div>
 
             <div className="mt-10">
-                {thread.children.map((childItem: Thread) => (
+                {thread.children?.map((childItem: any) => (
                     <ThreadCard
                         key={childItem._id}
                         id={childItem._id}
@@ -90,6 +62,6 @@ async function page({ params }: { params: { id: string } }) {
             </div>
         </section>
     );
-}
+};
 
-export default page;
+export default Page;
