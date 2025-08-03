@@ -30,7 +30,7 @@ export async function updateUser({userId,name,bio,username,path,image}:Params):P
         )
         if(path =='/profile/edit') revalidatePath(path)
     }
-    catch (error:any) {
+    catch (error:unknown) {
 
         throw new Error(`Failed to update user ${error.message}`);
     }
@@ -45,7 +45,7 @@ export const fetchUser = async (userId:string) => {
 
 
     }
-    catch (error:any) {
+    catch (error:unknown) {
         throw new Error(`Failed to fetch user ${error.message}`);
     }
 }

@@ -28,7 +28,7 @@ export const createThread = async ({text,author,communityId,path}:Params)=>{
 
         revalidatePath(path);
     }
-    catch (error:any) {
+    catch (error:unknown) {
         throw new Error(`Failed to create thread: ${error.message}`);
     }
 
@@ -61,7 +61,7 @@ export  async  function fetchPosts(pageNumber = 1, pageSize = 10) {
         return {posts, isNext}
 
 
-    } catch (error:any) {
+    } catch (error:unknown) {
         throw new Error(`Failed to fetch posts: ${error.message}`);
     }
 }
@@ -97,7 +97,7 @@ export async function fetchThreadById(id: string) {
 
 
         return thread;
-    } catch (error: any) {
+    } catch (error: unknown) {
         throw new Error(`Failed to fetch thread by id: ${error.message}`);
     }
 }
@@ -125,7 +125,7 @@ export async function addCommentToThread(threadId: string, commentText: string, 
         revalidatePath(path);
     }
 
-        catch(error: any) {
+        catch(error: unknown) {
             throw new Error(`Failed to add comment: ${error.message}`);
         }
 
