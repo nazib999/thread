@@ -35,13 +35,9 @@ interface Thread {
     // any other fields used by ThreadCard
 }
 
-interface PageProps {
-    params: {
-        id: string;
-    };
-}
 
-async function page({ params }: PageProps) {
+
+async function page({ params }: { params: { id: string } }) {
     if (!params.id) return null;
 
     const user = await currentUser();
